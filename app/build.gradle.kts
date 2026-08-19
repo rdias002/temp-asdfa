@@ -9,10 +9,10 @@ android {
     compileSdk = 36
     defaultConfig {
         applicationId = "com.example.testapp"
-        minSdk = 24
-        targetSdk = 36
-        versionCode = 2
-        versionName = "1.1"
+        minSdk = libs.versions.appMinSdk.get().toInt()
+        targetSdk = libs.versions.appTargetSdk.get().toInt()
+        versionCode = libs.versions.appVersionCode.get().toInt()
+        versionName = libs.versions.appVersionName.get()
     }
 
     buildTypes {
