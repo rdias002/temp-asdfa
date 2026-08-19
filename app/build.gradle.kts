@@ -1,7 +1,16 @@
+import java.util.Properties
+
 plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.compose.compiler)
   alias(libs.plugins.kotlin.serialization)
+}
+
+val keystoreProperties = Properties().apply {
+    val keystorePropertiesFile = rootProject.file("key.properties")
+    if (keystorePropertiesFile.exists()) {
+        keystorePropertiesFile.inputStream().use { load(it) }
+    }
 }
 
 android {
@@ -11,13 +20,25 @@ android {
         applicationId = "com.example.testapp"
         minSdk = libs.versions.appMinSdk.get().toInt()
         targetSdk = libs.versions.appTargetSdk.get().toInt()
-        versionCode = libs.versions.appVersionCode.get().toInt()
-        versionName = libs.versions.appVersionName.get()
+        versionCode = libs.versions.version.code.get().toInt()
+        versionName = libs.versions.version.name.get()
+    }
+
+    signingConfigs {
+        create("release") {
+            if (keystoreProperties.containsKey("storeFile")) {
+                storeFile = rootProject.file(keystoreProperties.getProperty("storeFile"))
+                storePassword = keystoreProperties.getProperty("storePassword")
+                keyAlias = keystoreProperties.getProperty("keyAlias")
+                keyPassword = keystoreProperties.getProperty("keyPassword")
+            }
+        }
     }
 
     buildTypes {
         release {
             isMinifyEnabled = false
+            signingConfig = signingConfigs.getByName("release")
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
