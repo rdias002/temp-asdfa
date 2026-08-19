@@ -34,7 +34,10 @@ fun MainScreen(
 
 @Composable
 internal fun MainScreen(data: List<String>, modifier: Modifier = Modifier) {
-  Column(modifier) { data.forEach { Greeting(it) } }
+  Column(modifier) {
+    Text(text = "Welcome to TestApp! Explore the sample data below.")
+    data.forEach { Greeting(it) }
+  }
 }
 
 @Composable
